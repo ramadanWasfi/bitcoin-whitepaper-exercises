@@ -65,7 +65,7 @@ const verifyBlock = (block) => {
     ) {
       verification = false;
       let prevBlock = Blockchain.blocks[block.index - 1];
-      if (prevBlock.hash !== blockHash(prevBlock)) verification = false;
+      if (prevBlock.hash !== block.prevHash) verification = false;
     }
   }
 };
