@@ -151,30 +151,24 @@ async function verifyBlock(bl) {
     if (bl.hash !== blockHash(bl)) return false;
     if (!Array.isArray(bl.data)) return false;
 
-    for (let i = 0; i < bl.data.length; i++) {
-      let isValid = verifyTransaction(bl.data[i]);
-      if (isValid === false) {
-        console.log("Error! Invalid Transaction has been found");
-        break;
-      }
+    for (let tx of bl.data) {
+      if (!(await verifyTransaction(tx))) return false;
     }
-    console.log("Blockchain is valid");
   }
 
   return true;
 }
 
-const verifyTransaction = (tx) => {
-  isValid = true;
+const verifyTransaction = async (tx) => {
   if (
+    tx.data === null ||
     tx.signature === undefined ||
     tx.pubKey === undefined ||
-    tx.hash !== transactionHash(tx) ||
-    tx.signature !== verifySignature(tx.signature)
+    tx.hash !== transactionHash(tx)
   )
-    isValid = false;
+    return false;
 
-  return isValid;
+  return verifySignature(tr.signature, tr.pubKey);
 };
 
 async function verifyChain(chain) {
